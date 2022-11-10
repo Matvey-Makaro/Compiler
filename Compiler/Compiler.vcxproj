@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LexicalAnalyzer.cpp" />
+    <ClCompile Include="directive.cpp" />
+    <ClCompile Include="lexical_analyzer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="string_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LexicalAnalyzer.h" />
+    <ClInclude Include="directive.h" />
+    <ClInclude Include="lexical_analyzer.h" />
+    <ClInclude Include="string_functions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

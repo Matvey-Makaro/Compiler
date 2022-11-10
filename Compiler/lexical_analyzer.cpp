@@ -1,10 +1,22 @@
-#include "LexicalAnalyzer.h"
+#include "lexical_analyzer.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <utility>
 
+
+LexicalAnalyzer::LexicalAnalyzer()
+{
+  constexpr size_t NUM_OF_DIRECTIVE = 10;
+  directives.reserve(NUM_OF_DIRECTIVE);
+
+  directives.push_back(std::make_unique<Add>());
+  directives.push_back(std::make_unique<Mul>());
+  directives.push_back(std::make_unique<Comma>());
+  directives.push_back(std::make_unique<ByteRegister>());
+  directives.push_back(std::make_unique<WordRegister>());
+}
 
 void LexicalAnalyzer::split(std::istream& in)
 {
@@ -47,4 +59,21 @@ void LexicalAnalyzer::split(std::istream& in)
 std::vector<std::vector<std::string>> LexicalAnalyzer::get_text()
 {
   return text;
+}
+
+void LexicalAnalyzer::parse()
+{
+  LexicalLine line;
+  for (const auto& str : text)
+  {
+    for (const auto& word : str)
+    {
+      for (const auto& d : directives)
+      {
+        if (d->is_directive(word))
+          line.push_back(d->get_id());
+      }
+    }
+    lexical_table.push_back(std::move(line));
+  }
 }
