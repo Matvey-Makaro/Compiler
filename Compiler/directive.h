@@ -1,39 +1,15 @@
 #pragma once
 
 #include "string_functions.h"
+#include "ISyntaxChecker.h"
+#include "aliases.h"
+#include "IDs.h"
 
 #include <string>
 #include <set>
 #include <utility>
+#include <stdexcept>
 
-enum class ID
-{
-  NULL_ID = -1,
-
-  DB = 0,
-  DW = 1,
-
-  COMMA = 5,
-
-  ADD = 10,
-  MUL = 11,
-  PUSH = 12,
-  POP = 13,
-  IDIV = 14,
-
-  NUMBER_BYTE = 100,
-  NUMBER_WORD = 101,
-  NUMBER_INFINITY = 102,
-
-  REGISTER_BYTE = 200,
-  REGISTER_WORD = 201,
-
-  VAR = 500,
-  VAR_BYTE = 501,
-  VAR_WORD = 502
-};
-
-using RegisterNames = std::set<std::string, CaseInsensLess<std::string>>;
 
 class Directive
 {
@@ -42,7 +18,7 @@ public:
     name(directive_name), id(directive_id)
   {}
 
-  ID get_id() const { return id; }
+  virtual ID get_id() const { return id; }
 
   virtual bool is_directive(const std::string& dir_name) const
   {
@@ -73,6 +49,32 @@ public:
   Comma() : Directive(",", ID::COMMA) {}
 };
 
+class Pop : public Directive, public ISyntaxChecker
+{
+public:
+  Pop() : Directive("pop", ID::POP) { }
+
+  virtual bool check(int lineNumber, const LexicalLine& ids) const
+  {
+    if (ids[0] != get_id())
+      return false;
+
+    // TODO: Заменить на своё исключение FewArgumentsException.
+    if (ids.size() < 2)
+      throw std::logic_error("Few arguments.");
+
+    for (int i = 1; i < ids.size(); i++)
+    {
+      // TODO: Заменить на REGISTER_QWORD
+      // TODO: Заменить на свой exception WrongArgumentsException.
+      if (ids[i] != ID::REGISTER_WORD)
+        throw std::logic_error("Wrong argument.");
+    }
+    
+    return true;
+  }
+};
+
 class Register : public Directive
 {
 public:
@@ -92,11 +94,43 @@ protected:
 class ByteRegister : public Register
 {
 public:
-  ByteRegister() : Register({ "al", "bl" }) {}
+  ByteRegister() : Register({ "al", "ah", "bl", "bh" }) {}
+
+  virtual ID get_id() const override 
+  { 
+    return ID::REGISTER_BYTE; 
+  }
 };
 
 class WordRegister : public Register
 {
 public:
   WordRegister() : Register({ "ax", "bx" }) {}
+
+  virtual ID get_id() const override 
+  { 
+    return ID::REGISTER_WORD; 
+  }
+};
+
+class DWordRegister : public Register
+{
+  DWordRegister() : Register({ "eax", "ebx" }) {}
+
+  virtual ID get_id() const override
+  {
+    // TODO: Возвращать ID для REGISTER_DWORD.
+    return ID::NULL_ID;
+  }
+};
+
+class QWordRegister : public Register
+{
+  QWordRegister() : Register({"rax", "rbx"}) {}
+
+  virtual ID get_id() const override
+  {
+    // TODO: Возвращать ID для REGISTER_DWORD.
+    return ID::NULL_ID;
+  }
 };
