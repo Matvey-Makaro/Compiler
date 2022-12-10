@@ -144,6 +144,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="string_functions.cpp" />
     <ClCompile Include="syntax_analyzer.cpp" />
+    <ClCompile Include="VarTable.cpp" />
+    <ClCompile Include="var_table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aliases.h" />
@@ -153,6 +155,8 @@
     <ClInclude Include="lexical_analyzer.h" />
     <ClInclude Include="string_functions.h" />
     <ClInclude Include="syntax_analyzer.h" />
+    <ClInclude Include="var.h" />
+    <ClInclude Include="var_table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
