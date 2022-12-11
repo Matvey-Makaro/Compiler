@@ -42,7 +42,7 @@ ID VarTable::get_type_of_variable(const std::string& name)
   }
 
   assert(0);
-  return ID::NULL_ID;
+  return ID::VAR;
 }
 
 short VarTable::get_address_of_variable(const std::string& name)

@@ -56,9 +56,19 @@ void LexicalAnalyzer::split(std::istream& in)
   }
 }
 
-std::vector<std::vector<std::string>> LexicalAnalyzer::get_text()
+Text& LexicalAnalyzer::get_text()
 {
   return text;
+}
+
+LexicalTable& LexicalAnalyzer::get_lexical_table()
+{
+  return lexical_table;
+}
+
+VarTable& LexicalAnalyzer::get_var_table()
+{
+  return var_table;
 }
 
 void LexicalAnalyzer::parse()
@@ -75,5 +85,51 @@ void LexicalAnalyzer::parse()
       }
     }
     lexical_table.push_back(std::move(line));
+  }
+}
+
+void LexicalAnalyzer::analyze()
+{
+  analyze_variables();
+}
+
+void LexicalAnalyzer::analyze_variables()
+{
+  for (size_t i = 0; i < lexical_table.size(); i++)
+    add_variable_to_table(lexical_table[i], i);
+
+  for (size_t i = 0; i < lexical_table.size(); i++)
+    assign_variable_types(lexical_table[i]);
+}
+
+void LexicalAnalyzer::add_variable_to_table(const LexicalLine& line, int line_number)
+{
+  if (line[0] != ID::VAR)
+    return;
+  if (line.size() != 3)
+    return;
+
+  const auto& parts = text[line_number];  // TODO: Возможно line_number-1
+  if (parts.size() != 3)
+    return;
+
+  std::string var_name = parts[0];
+  ID type = line[1];
+  std::string value = parts[2];
+  var_table.add_variable(var_name, type, value);
+}
+
+void LexicalAnalyzer::assign_variable_types(LexicalLine& line)
+{
+  for (size_t i = 0; i < line.size(); i++)
+  {
+    if (line[i] == ID::VAR)
+    {
+      const auto& parts = text[i];
+      if (parts.size() != line.size())
+        continue;
+
+      line[i] = var_table.get_type_of_variable(parts[i]);
+    }
   }
 }
