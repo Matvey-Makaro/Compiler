@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>  // TODO: For test, delete later.
+#include <unordered_map>  // TODO: For test, delete later.
+#include "listing_generate_helper.h" // TODO: For test, delete later.
 
 using namespace std;
 
@@ -35,6 +38,20 @@ int main()
       cout << static_cast<int>(el) << ' ';
     cout << '\n';
   }
+
+  std::stringstream ss("ssfdsf");
+  ss << std::hex;
+  int x;
+  ss >> x;
+  string tmp;
+  ss >> tmp;
+  cout << "TMP: " <<  tmp << endl;
+  if (ss.fail() || !ss.str().empty())
+    cout << "SS failed" << endl;
+  cout << "X: " << x << endl;
+
+  const std::unordered_map<std::string, int8_t> reg_name_to_code = { {"al", 0b000} };
+  cout << static_cast<int>(reg_name_to_code.at("al")) << endl;
 
   return 0;
 }

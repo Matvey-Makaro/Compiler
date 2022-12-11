@@ -2,6 +2,7 @@
 
 #include "string_functions.h"
 #include "ISyntaxChecker.h"
+#include "IListingGenerator.h"
 #include "aliases.h"
 #include "IDs.h"
 
@@ -49,7 +50,7 @@ public:
   Comma() : Directive(",", ID::COMMA) {}
 };
 
-class Pop : public Directive, public ISyntaxChecker
+class Pop : public Directive, public ISyntaxChecker, public IListingGenerator
 {
 public:
   Pop() : Directive("pop", ID::POP) { }
@@ -72,6 +73,20 @@ public:
     }
     
     return true;
+  }
+
+  virtual std::string generate(int line_number, const LexicalLine& lex_line, const std::vector<std::string>& strs, const VarTable& var_table) const override
+  {
+    if (lex_line[0] != get_id())
+      return "";
+
+    // TODO: Изменить генерацию кода для POP, должно использовать только 64-разрядные регистры.
+    if (lex_line[1] == ID::REGISTER_WORD)
+    {
+      // TODO: Обработать сегментные регистры.
+
+
+    }
   }
 };
 
