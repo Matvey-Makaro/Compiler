@@ -5,7 +5,10 @@
 SyntaxAnalyzer::SyntaxAnalyzer(const LexicalTable& lex_table) :
   lexical_table(lex_table)
 {
-  directives.push_back(std::make_unique<Pop>());
+  constexpr size_t NUM_OF_DIRECTIVE = 10;
+  directives.reserve(NUM_OF_DIRECTIVE);
+
+  directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Pop()));
 }
 
 void SyntaxAnalyzer::analyze() const

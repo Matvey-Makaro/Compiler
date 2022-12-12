@@ -146,7 +146,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="string_functions.cpp" />
     <ClCompile Include="syntax_analyzer.cpp" />
-    <ClCompile Include="VarTable.cpp" />
     <ClCompile Include="var_table.cpp" />
   </ItemGroup>
   <ItemGroup>

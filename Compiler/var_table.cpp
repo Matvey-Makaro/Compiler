@@ -9,7 +9,7 @@ VarTable::VarTable()
   offset = 0x103;
 }
 
-short VarTable::get_offset()
+short VarTable::get_offset() const
 {
   return 0;
   return offset;
@@ -27,7 +27,7 @@ void VarTable::add_variable(const std::string& name, ID type, const std::string&
   variables.emplace_back(name, type, value, addr);
 }
 
-ID VarTable::get_type_of_variable(const std::string& name)
+ID VarTable::get_type_of_variable(const std::string& name) const
 {
   for (const auto& var : variables)
   {
@@ -45,7 +45,7 @@ ID VarTable::get_type_of_variable(const std::string& name)
   return ID::VAR;
 }
 
-short VarTable::get_address_of_variable(const std::string& name)
+short VarTable::get_address_of_variable(const std::string& name) const
 {
   for (const auto& var : variables)
     if (strcicmp(var.name, name))

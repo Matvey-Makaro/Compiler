@@ -16,6 +16,7 @@ LexicalAnalyzer::LexicalAnalyzer()
   directives.push_back(std::make_unique<Comma>());
   directives.push_back(std::make_unique<ByteRegister>());
   directives.push_back(std::make_unique<WordRegister>());
+  directives.push_back(std::make_unique<Pop>());
 }
 
 void LexicalAnalyzer::split(std::istream& in)

@@ -30,9 +30,6 @@
     <ClCompile Include="syntax_analyzer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="VarTable.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="var_table.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>

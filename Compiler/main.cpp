@@ -1,4 +1,6 @@
 #include "lexical_analyzer.h"
+#include "syntax_analyzer.h"
+#include "listing_generator.h"
 
 #include <iostream>
 #include <fstream>
@@ -20,7 +22,7 @@ int main()
 
   LexicalAnalyzer lexical_analyzer;
   lexical_analyzer.split(fs);
-  auto text = lexical_analyzer.get_text();
+  const auto& text = lexical_analyzer.get_text();
   cout << "Text: " << endl;
   for (const auto& str : text)
   {
@@ -31,7 +33,7 @@ int main()
 
   cout << "\nTable:\n";
   lexical_analyzer.parse();
-  auto table = lexical_analyzer.get_lexical_table();
+  const auto& table = lexical_analyzer.get_lexical_table();
   for (const auto& line : table)
   {
     for (const auto el : line)
@@ -39,7 +41,25 @@ int main()
     cout << '\n';
   }
 
-  std::stringstream ss("ssfdsf");
+  SyntaxAnalyzer syntax_analyzer(table);
+  try
+  {
+    syntax_analyzer.analyze();
+  }
+  catch (const std::exception& ex)
+  {
+    cerr << ex.what() << endl;
+    return -1;
+  }
+
+  cout << "Generated text:" << endl;
+  const auto& var_table = lexical_analyzer.get_var_table();
+  ListingGenerator listing_generator(table, var_table, text);
+  listing_generator.generate(cout);
+  
+  
+
+ /* std::stringstream ss("ssfdsf");
   ss << std::hex;
   int x;
   ss >> x;
@@ -51,7 +71,7 @@ int main()
   cout << "X: " << x << endl;
 
   const std::unordered_map<std::string, int8_t> reg_name_to_code = { {"al", 0b000} };
-  cout << static_cast<int>(reg_name_to_code.at("al")) << endl;
+  cout << static_cast<int>(reg_name_to_code.at("al")) << endl;*/
 
   return 0;
 }
