@@ -19,6 +19,9 @@
     <Filter Include="Файлы заголовков\Directives">
       <UniqueIdentifier>{488a3381-2f60-4a7f-bb04-eec279664cf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Файлы заголовков\Exceptions">
+      <UniqueIdentifier>{81df822b-29fd-41de-b82a-85f37b98f010}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -94,6 +97,21 @@
     </ClInclude>
     <ClInclude Include="IDs.h">
       <Filter>Файлы заголовков\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="exception_with_line_number.h">
+      <Filter>Файлы заголовков\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="comma_expected_exception.h">
+      <Filter>Файлы заголовков\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="few_arguments_exception.h">
+      <Filter>Файлы заголовков\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="too_many_arguments_exception.h">
+      <Filter>Файлы заголовков\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="wrong_argument_exception.h">
+      <Filter>Файлы заголовков\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

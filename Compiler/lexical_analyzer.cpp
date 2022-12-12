@@ -1,5 +1,6 @@
 #include "lexical_analyzer.h"
 #include "pop.h"
+#include "mov.h"
 
 #include <iostream>
 #include <vector>
@@ -18,6 +19,7 @@ LexicalAnalyzer::LexicalAnalyzer()
   directives.push_back(std::make_unique<ByteRegister>());
   directives.push_back(std::make_unique<WordRegister>());
   directives.push_back(std::make_unique<Pop>());
+  directives.push_back(std::make_unique<Mov>());
 }
 
 void LexicalAnalyzer::split(std::istream& in)

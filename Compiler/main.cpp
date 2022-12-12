@@ -8,6 +8,11 @@
 #include <unordered_map>  // TODO: For test, delete later.
 #include "listing_generate_helper.h" // TODO: For test, delete later.
 
+#include "comma_expected_exception.h"
+#include "few_arguments_exception.h"
+#include "too_many_arguments_exception.h"
+#include "wrong_argument_exception.h"
+
 using namespace std;
 
 int main()
@@ -56,22 +61,6 @@ int main()
   const auto& var_table = lexical_analyzer.get_var_table();
   ListingGenerator listing_generator(table, var_table, text);
   listing_generator.generate(cout);
-  
-  
-
- /* std::stringstream ss("ssfdsf");
-  ss << std::hex;
-  int x;
-  ss >> x;
-  string tmp;
-  ss >> tmp;
-  cout << "TMP: " <<  tmp << endl;
-  if (ss.fail() || !ss.str().empty())
-    cout << "SS failed" << endl;
-  cout << "X: " << x << endl;
-
-  const std::unordered_map<std::string, int8_t> reg_name_to_code = { {"al", 0b000} };
-  cout << static_cast<int>(reg_name_to_code.at("al")) << endl;*/
 
   return 0;
 }

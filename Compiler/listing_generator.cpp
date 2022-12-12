@@ -1,6 +1,7 @@
 #include "listing_generator.h"
 #include "listing_generate_helper.h"
 #include "pop.h"
+#include "mov.h"
 
 
 ListingGenerator::ListingGenerator(const LexicalTable& lex_table, const VarTable& var_table, const Text& text) :
@@ -8,6 +9,7 @@ ListingGenerator::ListingGenerator(const LexicalTable& lex_table, const VarTable
 {
   // TODO: Добавить остальные директивы сюда, но лучше создать их в одном месте и везде передавать их в конструкторе.
   directives.push_back(std::make_unique<Pop>());
+  directives.push_back(std::make_unique<Mov>());
 }
 
 void ListingGenerator::generate(std::ostream& out)

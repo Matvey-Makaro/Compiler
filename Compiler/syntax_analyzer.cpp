@@ -1,5 +1,6 @@
 #include "syntax_analyzer.h"
 #include "pop.h"
+#include "mov.h"
 
 
 SyntaxAnalyzer::SyntaxAnalyzer(const LexicalTable& lex_table) :
@@ -9,6 +10,7 @@ SyntaxAnalyzer::SyntaxAnalyzer(const LexicalTable& lex_table) :
   directives.reserve(NUM_OF_DIRECTIVE);
 
   directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Pop()));
+  directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Mov()));
 }
 
 void SyntaxAnalyzer::analyze() const

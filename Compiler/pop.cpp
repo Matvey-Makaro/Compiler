@@ -1,23 +1,28 @@
 #include "pop.h"
+#include "few_arguments_exception.h"
+#include "too_many_arguments_exception.h"
+#include "wrong_argument_exception.h"
 
 Pop::Pop() : Directive("pop", ID::POP) 
 { }
 
-bool Pop::check(int lineNumber, const LexicalLine & ids) const
+bool Pop::check(int line_number, const LexicalLine & ids) const
 {
   if (ids[0] != get_id())
     return false;
 
-  // TODO: Заменить на своё исключение FewArgumentsException.
-  if (ids.size() < 2)
-    throw std::logic_error("Few arguments.");
+  constexpr int NECESSARY_ARGUMENTS_NUMBER = 1;
+
+  if (ids.size() < NECESSARY_ARGUMENTS_NUMBER + 1)
+    throw FewArgumentsException(line_number, NECESSARY_ARGUMENTS_NUMBER);
+  if (ids.size() > NECESSARY_ARGUMENTS_NUMBER + 1)
+    throw TooManyArgumentsException(line_number, NECESSARY_ARGUMENTS_NUMBER);
 
   for (size_t i = 1; i < ids.size(); i++)
   {
     // TODO: Заменить на REGISTER_QWORD
-    // TODO: Заменить на свой exception WrongArgumentsException.
     if (ids[i] != ID::REGISTER_WORD)
-      throw std::logic_error("Wrong argument.");
+      throw WrongArgumentException(line_number);
   }
 
   return true;

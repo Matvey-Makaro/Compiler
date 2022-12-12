@@ -152,7 +152,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aliases.h" />
+    <ClInclude Include="comma_expected_exception.h" />
     <ClInclude Include="directive.h" />
+    <ClInclude Include="exception_with_line_number.h" />
+    <ClInclude Include="few_arguments_exception.h" />
     <ClInclude Include="IDs.h" />
     <ClInclude Include="IListingGenerator.h" />
     <ClInclude Include="ISyntaxChecker.h" />
@@ -163,8 +166,10 @@
     <ClInclude Include="pop.h" />
     <ClInclude Include="string_functions.h" />
     <ClInclude Include="syntax_analyzer.h" />
+    <ClInclude Include="too_many_arguments_exception.h" />
     <ClInclude Include="var.h" />
     <ClInclude Include="var_table.h" />
+    <ClInclude Include="wrong_argument_exception.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
