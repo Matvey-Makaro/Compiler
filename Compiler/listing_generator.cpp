@@ -1,5 +1,6 @@
 #include "listing_generator.h"
-#include "directive.h"
+#include "listing_generate_helper.h"
+#include "pop.h"
 
 
 ListingGenerator::ListingGenerator(const LexicalTable& lex_table, const VarTable& var_table, const Text& text) :
@@ -21,7 +22,7 @@ void ListingGenerator::generate(std::ostream& out)
     {
       out << ListingGenerateHelper::to_hex_string(offset) << '\t';
       // TODO: Это работает если не будет пробелов, но сейчас есть пробелы.
-      offset += lineCode.size() / 8;
+      offset += std::count(cbegin(lineCode), cend(lineCode), ' ') + 1;
     }
     out << lineCode << '\n';
   }

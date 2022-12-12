@@ -15,6 +15,8 @@ enum class ID
   POP = 13,
   IDIV = 14,
 
+  MOV = 20,
+
   NUMBER_BYTE = 100,
   NUMBER_WORD = 101,
   NUMBER_INFINITY = 102,

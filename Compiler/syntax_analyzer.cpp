@@ -1,5 +1,5 @@
 #include "syntax_analyzer.h"
-#include "directive.h"
+#include "pop.h"
 
 
 SyntaxAnalyzer::SyntaxAnalyzer(const LexicalTable& lex_table) :

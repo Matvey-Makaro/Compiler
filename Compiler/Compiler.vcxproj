@@ -144,6 +144,8 @@
     <ClCompile Include="listing_generate_helper.cpp" />
     <ClCompile Include="listing_generator.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mov.cpp" />
+    <ClCompile Include="pop.cpp" />
     <ClCompile Include="string_functions.cpp" />
     <ClCompile Include="syntax_analyzer.cpp" />
     <ClCompile Include="var_table.cpp" />
@@ -157,6 +159,8 @@
     <ClInclude Include="lexical_analyzer.h" />
     <ClInclude Include="listing_generate_helper.h" />
     <ClInclude Include="listing_generator.h" />
+    <ClInclude Include="mov.h" />
+    <ClInclude Include="pop.h" />
     <ClInclude Include="string_functions.h" />
     <ClInclude Include="syntax_analyzer.h" />
     <ClInclude Include="var.h" />

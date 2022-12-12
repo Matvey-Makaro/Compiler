@@ -1,4 +1,5 @@
 #include "lexical_analyzer.h"
+#include "pop.h"
 
 #include <iostream>
 #include <vector>

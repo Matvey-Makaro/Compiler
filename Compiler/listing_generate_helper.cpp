@@ -20,7 +20,7 @@ std::string ListingGenerateHelper::to_hex_string(int value)
   std::string str = ss.str();
 
   if (str.size() % 2 == 1)
-    str += "0";
+    str = "0" + str;
 
   return str;
 }

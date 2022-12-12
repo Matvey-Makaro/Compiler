@@ -13,15 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\Directives">
+      <UniqueIdentifier>{653fd913-c024-45e4-ad0b-5fbc1a293d85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Directives">
+      <UniqueIdentifier>{488a3381-2f60-4a7f-bb04-eec279664cf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="lexical_analyzer.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="directive.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="string_functions.cpp">
@@ -39,12 +42,18 @@
     <ClCompile Include="listing_generate_helper.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="directive.cpp">
+      <Filter>Исходные файлы\Directives</Filter>
+    </ClCompile>
+    <ClCompile Include="pop.cpp">
+      <Filter>Исходные файлы\Directives</Filter>
+    </ClCompile>
+    <ClCompile Include="mov.cpp">
+      <Filter>Исходные файлы\Directives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lexical_analyzer.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="directive.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="string_functions.h">
@@ -53,13 +62,7 @@
     <ClInclude Include="syntax_analyzer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ISyntaxChecker.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="aliases.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="IDs.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="var.h">
@@ -71,11 +74,26 @@
     <ClInclude Include="listing_generator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="IListingGenerator.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="listing_generate_helper.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="directive.h">
+      <Filter>Файлы заголовков\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="ISyntaxChecker.h">
+      <Filter>Файлы заголовков\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="IListingGenerator.h">
+      <Filter>Файлы заголовков\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="pop.h">
+      <Filter>Файлы заголовков\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="mov.h">
+      <Filter>Файлы заголовков\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="IDs.h">
+      <Filter>Файлы заголовков\Directives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
