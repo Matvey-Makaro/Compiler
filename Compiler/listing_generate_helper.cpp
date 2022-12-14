@@ -51,7 +51,9 @@ bool ListingGenerateHelper::is_register_or_memory(ID id)
 
 bool ListingGenerateHelper::is_register(ID id)
 {
-    return (id == ID::REGISTER_BYTE) || (id == ID::REGISTER_WORD);
+    return (id == ID::REGISTER_QWORD) || (id == ID::REGISTER_QWORD_ADDITIONAL) || (id == ID::REGISTER_DWORD) ||
+           (id == ID::REGISTER_DWORD_ADDITIONAL) || (id == ID::REGISTER_WORD) || (id == ID::REGISTER_WORD_ADDITIONAL) ||
+           (id == ID::REGISTER_BYTE) || (id == ID::REGISTER_BYTE_ADDITIONAL);
 }
 
 bool ListingGenerateHelper::is_memory(ID id)
@@ -63,4 +65,20 @@ int8_t ListingGenerateHelper::get_register_code(std::string reg_name)
 {
     std::transform(cbegin(reg_name), cend(reg_name), begin(reg_name), tolower);
     return reg_name_to_code.at(reg_name);
+}
+
+bool ListingGenerateHelper::is_byte_register(ID id) {
+    return (id == ID::REGISTER_BYTE) || (id == ID::REGISTER_BYTE_ADDITIONAL);
+}
+
+bool ListingGenerateHelper::is_word_register(ID id) {
+    return (id == ID::REGISTER_WORD) || (id == ID::REGISTER_WORD_ADDITIONAL);
+}
+
+bool ListingGenerateHelper::is_dword_register(ID id) {
+    return (id == ID::REGISTER_DWORD) || (id == ID::REGISTER_DWORD_ADDITIONAL);
+}
+
+bool ListingGenerateHelper::is_qword_register(ID id) {
+    return (id == ID::REGISTER_QWORD) || (id == ID::REGISTER_QWORD_ADDITIONAL);
 }

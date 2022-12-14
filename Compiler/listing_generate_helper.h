@@ -17,6 +17,10 @@ public:
     static bool is_register_or_memory(ID id);
     static bool is_register(ID id);
     static bool is_memory(ID id);
+    static bool is_byte_register(ID id);
+    static bool is_word_register(ID id);
+    static bool is_dword_register(ID id);
+    static bool is_qword_register(ID id);
     static int8_t get_register_code(std::string reg_name);
 
     // TODO: Добавить поддержку сегментных регистров потом

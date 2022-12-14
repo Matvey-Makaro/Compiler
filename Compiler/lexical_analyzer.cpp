@@ -17,6 +17,12 @@ LexicalAnalyzer::LexicalAnalyzer()
     directives.push_back(std::make_unique<Comma>());
     directives.push_back(std::make_unique<ByteRegister>());
     directives.push_back(std::make_unique<WordRegister>());
+    directives.push_back(std::make_unique<DWordRegister>());
+    directives.push_back(std::make_unique<QWordRegister>());
+    directives.push_back(std::make_unique<ByteRegisterAdditional>());
+    directives.push_back(std::make_unique<WordRegisterAdditional>());
+    directives.push_back(std::make_unique<DWordRegisterAdditional>());
+    directives.push_back(std::make_unique<QWordRegisterAdditional>());
     directives.push_back(std::make_unique<Pop>());
     directives.push_back(std::make_unique<Mov>());
 }
