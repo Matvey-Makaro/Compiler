@@ -23,6 +23,7 @@ LexicalAnalyzer::LexicalAnalyzer()
     directives.push_back(std::make_unique<WordRegisterAdditional>());
     directives.push_back(std::make_unique<DWordRegisterAdditional>());
     directives.push_back(std::make_unique<QWordRegisterAdditional>());
+    directives.push_back(std::make_unique<IntegerNumber>());
     directives.push_back(std::make_unique<Pop>());
     directives.push_back(std::make_unique<Mov>());
 }
@@ -90,7 +91,11 @@ void LexicalAnalyzer::parse()
             for (const auto& d : directives)
             {
                 if (d->is_directive(word))
+                {
                     line.push_back(d->get_id());
+                    break;
+                }
+
             }
         }
         lexical_table.push_back(std::move(line));

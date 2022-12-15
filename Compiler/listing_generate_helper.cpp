@@ -13,7 +13,7 @@ const std::unordered_map<std::string, int8_t> ListingGenerateHelper::reg_name_to
         {"dil", 0b110}, {"di", 0b111}, {"edi", 0b111}, {"rdi", 0b111}, {"r15b", 0b111},  {"r15w", 0b111},  {"r15d", 0b111},  {"r15", 0b111},
 };
 
-std::string ListingGenerateHelper::to_hex_string(int value)
+std::string ListingGenerateHelper::to_hex_string(uint64_t value)
 {
     std::stringstream ss;
     ss << std::hex << std::uppercase << value;
@@ -23,25 +23,6 @@ std::string ListingGenerateHelper::to_hex_string(int value)
         str = "0" + str;
 
     return str;
-}
-
-std::string ListingGenerateHelper::to_little_endian_string(uint16_t value)
-{
-    return to_hex_string(value & 0xFF) + " " + to_hex_string((value >> 8) & 0xFF);
-}
-
-std::string ListingGenerateHelper::to_little_endian_string(const std::string& str)
-{
-    std::stringstream ss(str);
-    int value;
-    ss >> value;
-    if (ss.fail() || !ss.str().empty())
-        return "";
-
-    if ((-128 <= value) && (value <= 255))
-        return to_hex_string(value);
-
-    return to_little_endian_string(static_cast<uint16_t>(value));
 }
 
 bool ListingGenerateHelper::is_register_or_memory(ID id)
@@ -82,3 +63,10 @@ bool ListingGenerateHelper::is_dword_register(ID id) {
 bool ListingGenerateHelper::is_qword_register(ID id) {
     return (id == ID::REGISTER_QWORD) || (id == ID::REGISTER_QWORD_ADDITIONAL);
 }
+
+bool ListingGenerateHelper::is_integer_number(ID id) {
+    return id == ID::INTEGER_NUMBER;
+}
+
+
+
