@@ -2,14 +2,36 @@
 #include "syntax_analyzer.h"
 #include "listing_generator.h"
 #include "exceptions/exceptions.h"
+#include "elf_file_generator.h"
 
 #include <iostream>
 #include <fstream>
+#include <cstdio>
+
+#include <elf.h>    // TODO: For debug, delete later.
 
 using namespace std;
 
 int main()
 {
+    FILE* f = fopen("elf_file", "wb");
+    if(!f)
+    {
+        cerr << "Elf file doesn't open!" << endl;
+        return -1;
+    }
+
+#if 0
+    out << static_cast<unsigned char>(0x7f);
+    out << static_cast<unsigned char>('E');
+    out << static_cast<unsigned char>('L');
+    out << static_cast<unsigned char>('F');
+    out << 512U;
+#else
+    ElfFileGenerator elf_file_generator;
+    elf_file_generator.generate(f);
+#endif
+
     std::string fName = "test";
     std::fstream fs(fName);
     if (!fs.is_open())

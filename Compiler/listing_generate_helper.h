@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <vector>
 #include <unordered_map>
+#include <type_traits>
 
 class ListingGenerateHelper
 {
@@ -37,12 +38,15 @@ private:
 template<typename T>
 std::string to_little_endian_string(T value)
 {
+    static_assert(std::is_integral<T>::value, "Integral required");
+
+    auto unsigned_value = static_cast<std::make_unsigned_t<T>>(value);
     std::string result;
     for(size_t i = 0; i < sizeof(T) - 1; i++)
     {
-        result += ListingGenerateHelper::to_hex_string(value & 0xFF) + " ";
-        value >>= 8;
+        result += ListingGenerateHelper::to_hex_string(unsigned_value & 0xFF) + " ";
+        unsigned_value >>= 8;
     }
-    result += ListingGenerateHelper::to_hex_string(value & 0xFF);
+    result += ListingGenerateHelper::to_hex_string(unsigned_value & 0xFF);
     return result;
 }

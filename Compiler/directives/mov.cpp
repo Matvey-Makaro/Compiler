@@ -257,6 +257,6 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
         }
 
     }
-    
+
     return result;
 }
