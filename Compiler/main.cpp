@@ -14,6 +14,8 @@ using namespace std;
 
 int main()
 {
+    cout << sizeof(Elf64_Phdr) << endl;
+
     FILE* f = fopen("elf_file", "wb");
     if(!f)
     {

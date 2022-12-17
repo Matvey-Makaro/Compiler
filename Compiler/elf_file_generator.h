@@ -11,8 +11,10 @@ public:
 
 private:
     void init_header();
-    void write_header(FILE* file);
+    void fill_program_header();
 
 private:
-    Elf64_Ehdr header;
+    Elf64_Ehdr elf_header;
+    Elf64_Phdr program_header;
+    Elf64_Shdr segment_header;
 };

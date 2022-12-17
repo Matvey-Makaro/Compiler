@@ -2,14 +2,15 @@
 #include "listing_generate_helper.h"
 
 ElfFileGenerator::ElfFileGenerator() :
-        header{0}
+        elf_header{0}
 {
     init_header();
+    fill_program_header();
 }
 
 void ElfFileGenerator::init_header()
 {
-    auto* const e_ident = header.e_ident;
+    auto* const e_ident = elf_header.e_ident;
     e_ident[EI_MAG0] = 0x7f;
     e_ident[EI_MAG1] = 'E';
     e_ident[EI_MAG2] = 'L';
@@ -27,77 +28,142 @@ void ElfFileGenerator::init_header()
     e_ident[14] = 0;
     e_ident[15] = 0;
 
-    header.e_type = ET_EXEC;
-    header.e_machine = EM_X86_64;
-    header.e_version = EV_CURRENT;
-    // header.e_entry is filled later.
-    // header.e_phoff is filled later.
-    // header.e_shoff is filled later.
-    header.e_flags = 0;
-    header.e_ehsize = sizeof(Elf64_Ehdr);
-    // header.e_phentsize is filled later.
-    // header.e_phnum is filled later.
-    // header.e_shentsize is filled later.
-    // header.e_shnum is filled later.
-    header.e_shstrndx = 0;
+    elf_header.e_type = ET_EXEC;
+    elf_header.e_machine = EM_X86_64;
+    elf_header.e_version = EV_CURRENT;
+    // elf_header.e_entry is filled later.
+    // elf_header.e_phoff is filled later.
+    // elf_header.e_shoff is filled later.
+    elf_header.e_flags = 0;
+    elf_header.e_ehsize = sizeof(Elf64_Ehdr);
+    // elf_header.e_phentsize is filled later.
+    // elf_header.e_phnum is filled later.
+    // elf_header.e_shentsize is filled later.
+    // elf_header.e_shnum is filled later.
+    elf_header.e_shstrndx = 0;
 
     // TODO: For test:
 #if 1
-    header.e_entry = 0x400078;
-    header.e_phoff = 64;
-    header.e_shoff = 0;
-    header.e_phentsize = 56;
-    header.e_phnum = 1;
-    header.e_shentsize = 0;
-    header.e_shnum = 0;
+    // elf_header.e_entry = 0x400000 + sizeof(elf_header);
+    elf_header.e_entry = 0x400078;
+    elf_header.e_phoff = sizeof(elf_header);    // Где начинается Program elf_header table
+    elf_header.e_shoff = 0;
+    elf_header.e_phentsize = sizeof(program_header);
+    elf_header.e_phnum = 1;     // Количество в Program elf_header table
+    elf_header.e_shentsize = 0;
+    elf_header.e_shnum = 0;
 #endif
 }
 
 void ElfFileGenerator::generate(FILE* file)
 {
-    write_header(file);
+    fwrite(reinterpret_cast<void*>(&elf_header), sizeof(elf_header), 1, file);
+    fwrite(reinterpret_cast<void*>(&program_header), sizeof(program_header), 1, file);
+
+
+    // TODO: Поменять p_filesz и p_memsz в program header.
+    uint8_t commands[100];
+#if 1
+    // mov rax, 0
+    commands[0] = 0xB8;
+    commands[1] = 0x00;
+    commands[2] = 0x00;
+    commands[3] = 0x00;
+    commands[4] = 0x00;
+
+    //mov rdi, 0
+    commands[5] = 0xBF;
+    commands[6] = 0x00;
+    commands[7] = 0x00;
+    commands[8] = 0x00;
+    commands[9] = 0x00;
+
+    // mov rsi, 0
+    commands[10] = 0xBE;
+    commands[11] = 0x22;
+    commands[12] = 0x00;
+    commands[13] = 0x40;
+    commands[14] = 0x00;
+
+    //mov rdx, 14
+    commands[15] = 0xBA;
+    commands[16] = 0x02;
+    commands[17] = 0x00;
+    commands[18] = 0x00;
+    commands[19] = 0x00;
+
+    // syscall
+    commands[20] = 0x0F;
+    commands[21] = 0x05;
+
+    // mov rax, 60
+    commands[22] = 0xB8;
+    commands[23] = 0x3C;
+    commands[24] = 0x00;
+    commands[25] = 0x00;
+    commands[26] = 0x00;
+
+    //mov rdi, 0
+    commands[27] = 0xBF;
+    commands[28] = 0x00;
+    commands[29] = 0x00;
+    commands[30] = 0x00;
+    commands[31] = 0x00;
+
+    // syscall
+    commands[32] = 0x0F;
+    commands[33] = 0x05;
+    commands[34] = 0x00;
+    commands[35] = 0x00;
+
+
+
+    for(size_t i = 0; i < 34; i++)
+        fwrite(&commands[i], sizeof(commands[i]), 1, file);
+#else
+    // mov rax, 60
+    commands[0] = 0xB8;
+    commands[1] = 0x3C;
+    commands[2] = 0x00;
+    commands[3] = 0x00;
+    commands[4] = 0x00;
+
+    //mov rdi, 0
+    commands[5] = 0xBF;
+    commands[6] = 0x00;
+    commands[7] = 0x00;
+    commands[8] = 0x00;
+    commands[9] = 0x00;
+
+    // syscall
+    commands[10] = 0x0F;
+    commands[11] = 0x05;
+    commands[12] = 0x00;
+    commands[13] = 0x00;
+    commands[14] = 0x00;
+    commands[15] = 0x00;
+
+
+
+    for(size_t i = 0; i < 14; i++)
+        fwrite(&commands[i], sizeof(commands[i]), 1, file);
+#endif
 }
 
-void ElfFileGenerator::write_header(FILE *file)
+void ElfFileGenerator::fill_program_header()
 {
-    fwrite(header.e_ident, sizeof(header.e_ident[0]), 16, file);
+    program_header.p_type = PT_LOAD;
+    program_header.p_flags = PF_X | PF_R;
+    program_header.p_offset = sizeof(elf_header) + sizeof(program_header);
+    //program_header.p_offset = 0;    // Скорее всего смещение относительно начала сегментов, а не начала файла.
+    program_header.p_vaddr = 0x400000 + program_header.p_offset;
+    program_header.p_paddr = 0x0;
+    // program_header.p_filesz; is filled later.
+    // program_header.p_memsz; is filled later.
+    program_header.p_align = 0x1000;
 
-    auto le_e_type = header.e_type;
-    fwrite(reinterpret_cast<void*>(&le_e_type), sizeof(le_e_type), 1, file);
-
-    auto le_e_machine = header.e_machine;
-    fwrite(reinterpret_cast<void*>(&le_e_machine), sizeof(le_e_machine), 1, file);
-
-    auto le_e_version = header.e_version;
-    fwrite(reinterpret_cast<void*>(&le_e_version), sizeof(le_e_version), 1, file);
-
-    auto le_e_entry = header.e_entry;
-    fwrite(reinterpret_cast<void*>(&le_e_entry), sizeof(le_e_entry), 1, file);
-
-    auto le_e_phoff = header.e_phoff;
-    fwrite(reinterpret_cast<void*>(&le_e_phoff), sizeof(le_e_phoff), 1, file);
-
-    auto le_e_shoff = header.e_shoff;
-    fwrite(reinterpret_cast<void*>(&le_e_shoff), sizeof(le_e_shoff), 1, file);
-
-    auto le_e_flags = header.e_flags;
-    fwrite(reinterpret_cast<void*>(&le_e_flags), sizeof(le_e_flags), 1, file);
-
-    auto le_e_ehsize = header.e_ehsize;
-    fwrite(reinterpret_cast<void*>(&le_e_ehsize), sizeof(le_e_ehsize), 1, file);
-
-    auto le_e_phentsize = header.e_phentsize;
-    fwrite(reinterpret_cast<void*>(&le_e_phentsize), sizeof(le_e_phentsize), 1, file);
-
-    auto le_e_phnum = header.e_phnum;
-    fwrite(reinterpret_cast<void*>(&le_e_phnum), sizeof(le_e_phnum), 1, file);
-
-    auto le_e_shentsize = header.e_shentsize;
-    fwrite(reinterpret_cast<void*>(&le_e_shentsize), sizeof(le_e_shentsize), 1, file);
-
-    auto le_e_shnum = header.e_shnum;
-    fwrite(reinterpret_cast<void*>(&le_e_shnum), sizeof(le_e_shnum), 1, file);
-
-    auto le_e_shstrndx = header.e_shstrndx;
-    fwrite(reinterpret_cast<void*>(&le_e_shstrndx), sizeof(le_e_shstrndx), 1, file);
+#if 1
+    program_header.p_filesz = 34;
+    program_header.p_memsz = 34;
+#endif
 }
