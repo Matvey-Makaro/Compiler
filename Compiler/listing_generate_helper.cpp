@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-const std::unordered_map<std::string, int8_t> ListingGenerateHelper::reg_name_to_code = {
+const std::unordered_map<std::string, uint8_t> ListingGenerateHelper::reg_name_to_code = {
         {"al", 0b000},  {"ax", 0b000}, {"eax", 0b000}, {"rax", 0b000}, {"r8b", 0b000},   {"r8w", 0b000},   {"r8d", 0b000},   {"r8", 0b000},
         {"cl", 0b001},  {"cx", 0b001}, {"ecx", 0b001}, {"rcx", 0b001}, {"r9b", 0b001},   {"r9w", 0b001},   {"r9d", 0b001},   {"r9", 0b001},
         {"dl", 0b010},  {"dx", 0b010}, {"edx", 0b010}, {"rdx", 0b010}, {"r10b", 0b010},  {"r10w", 0b010},  {"r10d", 0b010},  {"r10", 0b010},
@@ -25,47 +25,10 @@ std::string ListingGenerateHelper::to_hex_string(uint64_t value)
     return str;
 }
 
-bool ListingGenerateHelper::is_register_or_memory(ID id)
-{
-    return is_register(id) || is_memory(id);
-}
-
-bool ListingGenerateHelper::is_register(ID id)
-{
-    return (id == ID::REGISTER_QWORD) || (id == ID::REGISTER_QWORD_ADDITIONAL) || (id == ID::REGISTER_DWORD) ||
-           (id == ID::REGISTER_DWORD_ADDITIONAL) || (id == ID::REGISTER_WORD) || (id == ID::REGISTER_WORD_ADDITIONAL) ||
-           (id == ID::REGISTER_BYTE) || (id == ID::REGISTER_BYTE_ADDITIONAL);
-}
-
-bool ListingGenerateHelper::is_memory(ID id)
-{
-    return (id == ID::VAR_BYTE) || (id == ID::VAR_WORD);
-}
-
-int8_t ListingGenerateHelper::get_register_code(std::string reg_name)
+uint8_t ListingGenerateHelper::get_register_code(std::string reg_name)
 {
     std::transform(cbegin(reg_name), cend(reg_name), begin(reg_name), tolower);
     return reg_name_to_code.at(reg_name);
-}
-
-bool ListingGenerateHelper::is_byte_register(ID id) {
-    return (id == ID::REGISTER_BYTE) || (id == ID::REGISTER_BYTE_ADDITIONAL);
-}
-
-bool ListingGenerateHelper::is_word_register(ID id) {
-    return (id == ID::REGISTER_WORD) || (id == ID::REGISTER_WORD_ADDITIONAL);
-}
-
-bool ListingGenerateHelper::is_dword_register(ID id) {
-    return (id == ID::REGISTER_DWORD) || (id == ID::REGISTER_DWORD_ADDITIONAL);
-}
-
-bool ListingGenerateHelper::is_qword_register(ID id) {
-    return (id == ID::REGISTER_QWORD) || (id == ID::REGISTER_QWORD_ADDITIONAL);
-}
-
-bool ListingGenerateHelper::is_integer_number(ID id) {
-    return id == ID::INTEGER_NUMBER;
 }
 
 

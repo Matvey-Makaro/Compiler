@@ -26,6 +26,11 @@ LexicalAnalyzer::LexicalAnalyzer()
     directives.push_back(std::make_unique<IntegerNumber>());
     directives.push_back(std::make_unique<Pop>());
     directives.push_back(std::make_unique<Mov>());
+    directives.push_back(std::make_unique<DB>());
+    directives.push_back(std::make_unique<DW>());
+    directives.push_back(std::make_unique<DD>());
+    directives.push_back(std::make_unique<DQ>());
+    directives.push_back(std::make_unique<Variable>());
 }
 
 void LexicalAnalyzer::split(std::istream& in)
@@ -113,7 +118,7 @@ void LexicalAnalyzer::analyze_variables()
         add_variable_to_table(lexical_table[i], i);
 
     for (size_t i = 0; i < lexical_table.size(); i++)
-        assign_variable_types(lexical_table[i]);
+        assign_variable_types(lexical_table[i], i);
 }
 
 void LexicalAnalyzer::add_variable_to_table(const LexicalLine& line, int line_number)
@@ -133,13 +138,13 @@ void LexicalAnalyzer::add_variable_to_table(const LexicalLine& line, int line_nu
     var_table.add_variable(var_name, type, value);
 }
 
-void LexicalAnalyzer::assign_variable_types(LexicalLine& line)
+void LexicalAnalyzer::assign_variable_types(LexicalLine &line, int line_number)
 {
     for (size_t i = 0; i < line.size(); i++)
     {
         if (line[i] == ID::VAR)
         {
-            const auto& parts = text[i];
+            const auto& parts = text[line_number];
             if (parts.size() != line.size())
                 continue;
 

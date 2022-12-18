@@ -10,6 +10,7 @@ ListingGenerator::ListingGenerator(const LexicalTable& lex_table, const VarTable
     // TODO: Добавить остальные директивы сюда, но лучше создать их в одном месте и везде передавать их в конструкторе.
     directives.push_back(std::make_unique<Pop>());
     directives.push_back(std::make_unique<Mov>());
+    directives.push_back(std::make_unique<Variable>());
 }
 
 void ListingGenerator::generate(std::ostream& out)
@@ -20,7 +21,7 @@ void ListingGenerator::generate(std::ostream& out)
     {
         const auto& lex_line = lexic_table[i];
         std::string lineCode = generateLine(i, lex_line, text[i]);
-        if (!ListingGenerateHelper::is_memory(lex_line[0]))
+        if (!is_memory(lex_line[0]))
         {
             out << ListingGenerateHelper::to_hex_string(offset) << '\t';
             // TODO: Это работает, если не будет пробелов, но сейчас есть пробелы.

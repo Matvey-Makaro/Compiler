@@ -18,8 +18,7 @@ bool Pop::check(int line_number, const LexicalLine & ids) const
 
     for (size_t i = 1; i < ids.size(); i++)
     {
-        // TODO: Заменить на REGISTER_QWORD
-        if (ids[i] != ID::REGISTER_WORD)
+        if (!is_qword_register(ids[i]))
             throw WrongArgumentException(line_number);
     }
 
@@ -30,17 +29,17 @@ std::string Pop::generate(int line_number, const LexicalLine& lex_line, const st
 {
     if (lex_line[0] != get_id())
         return "";
+    assert(is_qword_register(lex_line[1]));
 
-    // TODO: Изменить генерацию кода для POP, должно использовать только 64-разрядные регистры.
-    if (lex_line[1] == ID::REGISTER_WORD)
+    std::string result;
+    // REX(id needed) 58 + rd
+    if(lex_line[1] == ID::REGISTER_QWORD_ADDITIONAL)
     {
-        // TODO: Обработать сегментные регистры.
-        int8_t reg_id = ListingGenerateHelper::get_register_code(strs[1]);
-        // reg16/32  01011reg
-        int8_t machine_code = static_cast<int8_t>(0b01011000 | reg_id);
-        return ListingGenerateHelper::to_hex_string(machine_code);
+        uint8_t rex_prefix = 0b01000001;
+        result += to_little_endian_string(rex_prefix);
     }
-
-    assert(0);
-    return "";
+    uint8_t reg_id = ListingGenerateHelper::get_register_code(strs[1]);
+    uint8_t opcode = 0x58 | reg_id;
+    result += " " + to_little_endian_string(opcode);
+    return result;
 }

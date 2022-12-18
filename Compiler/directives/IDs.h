@@ -6,6 +6,8 @@ enum class ID
 
     DB = 0,
     DW = 1,
+    DD = 2,
+    DQ = 3,
 
     COMMA = 5,
 
@@ -35,5 +37,17 @@ enum class ID
 
     VAR = 500,
     VAR_BYTE = 501,
-    VAR_WORD = 502
+    VAR_WORD = 502,
+    VAR_DWORD = 503,
+    VAR_QWORD = 504,
 };
+
+bool is_register_or_memory(ID id);
+bool is_register(ID id);
+bool is_memory(ID id);
+bool is_byte_register(ID id);
+bool is_word_register(ID id);
+bool is_dword_register(ID id);
+bool is_qword_register(ID id);
+bool is_integer_number(ID id);
+bool is_define_variable(ID id);

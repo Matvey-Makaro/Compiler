@@ -25,7 +25,7 @@ private:
     // void analyze_line(int line_number);
     void analyze_variables();
     void add_variable_to_table(const LexicalLine& line, int line_number);
-    void assign_variable_types(LexicalLine& line);
+    void assign_variable_types(LexicalLine &line, int line_number);
 
 private:
     Text text;

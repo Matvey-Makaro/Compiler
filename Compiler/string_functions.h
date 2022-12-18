@@ -22,3 +22,7 @@ public:
 };
 
 bool strcicmp(const std::string& lhs, const std::string& rhs);
+std::string to_8byte_hex_str(const std::string& value);
+std::string to_16byte_hex_str(const std::string& value);
+std::string to_32byte_hex_str(const std::string& value);
+std::string to_64byte_hex_str(const std::string& value);

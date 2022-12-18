@@ -1,6 +1,7 @@
 #include "mov.h"
 #include "../listing_generate_helper.h"
 #include "../exceptions/exceptions.h"
+#include "../string_functions.h"
 
 #include <sstream>
 
@@ -54,9 +55,9 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
         return "";
 
     std::string result;
-    if(ListingGenerateHelper::is_register(lex_line[3]))
+    if(is_register(lex_line[3]))
     {
-        if (ListingGenerateHelper::is_byte_register(lex_line[1]) && ListingGenerateHelper::is_byte_register(lex_line[3]))
+        if (is_byte_register(lex_line[1]) && is_byte_register(lex_line[3]))
         {
             bool is_rex_prefix_needed = false;
             uint8_t rex_prefix = 0b01000000;    //0b0100WRXB
@@ -80,7 +81,7 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
             uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
             result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
         }
-        else if (ListingGenerateHelper::is_word_register(lex_line[1]) && ListingGenerateHelper::is_word_register(lex_line[3]))
+        else if (is_word_register(lex_line[1]) && is_word_register(lex_line[3]))
         {
             result += "66 ";  // prefix
 
@@ -105,7 +106,7 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
             uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
             result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
         }
-        else if(ListingGenerateHelper::is_dword_register(lex_line[1]) && ListingGenerateHelper::is_dword_register(lex_line[3]))
+        else if(is_dword_register(lex_line[1]) && is_dword_register(lex_line[3]))
         {
             bool is_rex_prefix_needed = false;
             uint8_t rex_prefix = 0b01000000;    //0b0100WRXB
@@ -128,7 +129,7 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
             uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
             result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
         }
-        else if(ListingGenerateHelper::is_qword_register(lex_line[1]) && ListingGenerateHelper::is_qword_register(lex_line[3])) {
+        else if(is_qword_register(lex_line[1]) && is_qword_register(lex_line[3])) {
             uint8_t rex_prefix = 0b01001000;    //0b0100WRXB
             if (lex_line[1] == ID::REGISTER_QWORD_ADDITIONAL)
                 rex_prefix |= 0b00000001;
@@ -146,9 +147,9 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
     }
     else
     {
-        if(ListingGenerateHelper::is_integer_number(lex_line[3]))
+        if(is_integer_number(lex_line[3]))
         {
-            if(ListingGenerateHelper::is_qword_register(lex_line[1]))
+            if(is_qword_register(lex_line[1]))
             {
                 uint8_t rex_prefix = 0b01001000;    //0b0100WRXB
                 if (lex_line[1] == ID::REGISTER_QWORD_ADDITIONAL)
@@ -160,22 +161,9 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 opcode |= ListingGenerateHelper::get_register_code(strs[1]);
                 result += " " + to_little_endian_string(opcode) + " ";
 
-                std::stringstream ss(strs[3]);
-                if(strs[3][0] == '-')
-                {
-                    int64_t value;
-                    ss >> value;
-                    result += to_little_endian_string(value);
-                }
-                else
-                {
-                    uint64_t value;
-                    ss >> value;
-                    result += to_little_endian_string(value);
-                }
-
+                result += to_64byte_hex_str(strs[3]);
             }
-            else if (ListingGenerateHelper::is_dword_register(lex_line[1]))
+            else if (is_dword_register(lex_line[1]))
             {
                 if(lex_line[1] == ID::REGISTER_DWORD_ADDITIONAL)
                 {
@@ -187,21 +175,9 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 opcode |= ListingGenerateHelper::get_register_code(strs[1]);
                 result += to_little_endian_string(opcode) + " ";
 
-                std::stringstream ss(strs[3]);
-                if(strs[3][0] == '-')
-                {
-                    int32_t value;
-                    ss >> value;
-                    result += to_little_endian_string(value);
-                }
-                else
-                {
-                    uint32_t value;
-                    ss >> value;
-                    result += to_little_endian_string(value);
-                }
+                result += to_32byte_hex_str(strs[3]);
             }
-            else if(ListingGenerateHelper::is_word_register(lex_line[1]))
+            else if(is_word_register(lex_line[1]))
             {
                 result += "66 ";
                 if(lex_line[1] == ID::REGISTER_WORD_ADDITIONAL)
@@ -213,22 +189,9 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 opcode |= ListingGenerateHelper::get_register_code(strs[1]);
                 result += to_little_endian_string(opcode) + " ";
 
-                std::stringstream ss(strs[3]);
-                if(strs[3][0] == '-')
-                {
-                    int16_t value;
-                    ss >> value;
-                    result += to_little_endian_string(value);
-                }
-                else
-                {
-                    uint16_t value;
-                    ss >> value;
-                    result += to_little_endian_string(value);
-                }
-
+                result += to_16byte_hex_str(strs[3]);
             }
-            else if(ListingGenerateHelper::is_byte_register(lex_line[1]))
+            else if(is_byte_register(lex_line[1]))
             {
                 if(lex_line[1] == ID::REGISTER_BYTE_ADDITIONAL)
                 {
@@ -239,19 +202,7 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 opcode |= ListingGenerateHelper::get_register_code(strs[1]);
                 result += to_little_endian_string(opcode) + " ";
 
-                std::stringstream ss(strs[3]);
-                if(strs[3][0] == '-')
-                {
-                    int16_t value;
-                    ss >> value;
-                    result += to_little_endian_string(static_cast<int8_t>(value));
-                }
-                else
-                {
-                    uint16_t value;
-                    ss >> value;
-                    result += to_little_endian_string(static_cast<uint8_t>(value));
-                }
+                result +=to_8byte_hex_str(strs[3]);
             }
             else assert(0);
         }

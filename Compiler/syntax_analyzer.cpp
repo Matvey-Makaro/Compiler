@@ -10,6 +10,7 @@ SyntaxAnalyzer::SyntaxAnalyzer(const LexicalTable& lex_table) :
 
     directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Pop()));
     directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Mov()));
+    directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Variable()));
 }
 
 void SyntaxAnalyzer::analyze() const

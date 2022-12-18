@@ -7,13 +7,24 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <regex> // TODO: For debug, delete later.
 
 #include <elf.h>    // TODO: For debug, delete later.
 
 using namespace std;
 
+bool is_valid_var_name(string_view str) {
+    static const regex r("^[a-zA-Z0-9]+$");
+    return regex_match(str.data(), r);
+}
+
 int main()
 {
+    cout << is_valid_var_name("hello9") << endl;
+    cout << is_valid_var_name("hello var") << endl;
+    cout << is_valid_var_name("9hello") << endl;
+    cout << is_valid_var_name("Hel*hhe") << endl;
+
     cout << sizeof(Elf64_Phdr) << endl;
 
     FILE* f = fopen("elf_file", "wb");
@@ -62,6 +73,8 @@ int main()
             cout << static_cast<int>(el) << ' ';
         cout << '\n';
     }
+
+    lexical_analyzer.analyze();
 
     SyntaxAnalyzer syntax_analyzer(table);
     try
