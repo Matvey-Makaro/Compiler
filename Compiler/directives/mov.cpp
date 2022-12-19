@@ -26,15 +26,14 @@ bool Mov::check(int line_number, const LexicalLine & ids) const
     if (ids[0] != get_id())
         return false;
 
-    constexpr int NECESSARY_ARGUMENTS_NUMBER = 2;
+    if(ids.size() > 2 && ids[2] != ID::COMMA)
+        throw CommaExpectedException(line_number);
 
+    constexpr int NECESSARY_ARGUMENTS_NUMBER = 2;
     if (ids.size() < NECESSARY_ARGUMENTS_NUMBER + 2)
         throw FewArgumentsException(line_number, NECESSARY_ARGUMENTS_NUMBER);
     if (ids.size() > NECESSARY_ARGUMENTS_NUMBER + 2)
         throw TooManyArgumentsException(line_number, NECESSARY_ARGUMENTS_NUMBER);
-
-    if (ids[2] != ID::COMMA)
-        throw CommaExpectedException(line_number);
 
     try
     {
