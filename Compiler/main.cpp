@@ -7,55 +7,42 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include <regex> // TODO: For debug, delete later.
-
-#include <elf.h>    // TODO: For debug, delete later.
 
 using namespace std;
 
-bool is_valid_var_name(string_view str) {
-    static const regex r("^[a-zA-Z0-9]+$");
-    return regex_match(str.data(), r);
-}
-
-int main()
+int main(int argc, char* argv[])
 {
-    cout << is_valid_var_name("hello9") << endl;
-    cout << is_valid_var_name("hello var") << endl;
-    cout << is_valid_var_name("9hello") << endl;
-    cout << is_valid_var_name("Hel*hhe") << endl;
-
-    cout << sizeof(Elf64_Phdr) << endl;
-
-    FILE* f = fopen("elf_file", "wb");
-    if(!f)
+    if(argc < 3)
     {
-        cerr << "Elf file doesn't open!" << endl;
-        return -1;
+        cerr << "Few arguments. The names of the input and output files were expected." << endl;
+        return 1;
     }
 
-#if 0
-    out << static_cast<unsigned char>(0x7f);
-    out << static_cast<unsigned char>('E');
-    out << static_cast<unsigned char>('L');
-    out << static_cast<unsigned char>('F');
-    out << 512U;
-#else
+    const char* const input_file_name = argv[1];
+    const char* const output_file_name = argv[2];
+
+    FILE* f = fopen(output_file_name, "wb");
+    if(!f)
+    {
+        cerr << "File \"" << output_file_name <<"\" doesn't open!" << endl;
+        return 2;
+    }
+
+
     ElfFileGenerator elf_file_generator;
     elf_file_generator.generate(f);
-#endif
 
-    std::string fName = "test";
-    std::fstream fs(fName);
+    std::fstream fs(input_file_name);
     if (!fs.is_open())
     {
-        cerr << "File \"" << fName << "\" doesn't open." << endl;
-        return -1;
+        cerr << "File \"" << input_file_name << "\" doesn't open." << endl;
+        return 3;
     }
 
     LexicalAnalyzer lexical_analyzer;
     lexical_analyzer.split(fs);
     const auto& text = lexical_analyzer.get_text();
+#if 0
     cout << "Text: " << endl;
     for (const auto& str : text)
     {
@@ -63,17 +50,19 @@ int main()
             cout << word << ' ';
         cout << '\n';
     }
+#endif
 
-    cout << "\nTable:\n";
     lexical_analyzer.parse();
     const auto& table = lexical_analyzer.get_lexical_table();
+#if 0
+    cout << "\nTable:\n";
     for (const auto& line : table)
     {
         for (const auto el : line)
             cout << static_cast<int>(el) << ' ';
         cout << '\n';
     }
-
+#endif
     lexical_analyzer.analyze();
 
     SyntaxAnalyzer syntax_analyzer(table);
