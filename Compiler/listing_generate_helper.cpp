@@ -31,5 +31,21 @@ uint8_t ListingGenerateHelper::get_register_code(std::string reg_name)
     return reg_name_to_code.at(reg_name);
 }
 
+uint8_t ListingGenerateHelper::get_modRM_for_reg_reg(const std::string &lhs_reg_name, const std::string &rhs_reg_name)
+{
+    uint8_t rm_reg = ListingGenerateHelper::get_register_code(lhs_reg_name);
+    uint8_t reg_opcode_reg = ListingGenerateHelper::get_register_code(rhs_reg_name);
+    uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
+    return modRM_code;
+}
+
+uint8_t ListingGenerateHelper::get_modRM_for_reg_imm(const std::string &reg_name)
+{
+    uint8_t rm_reg = ListingGenerateHelper::get_register_code(reg_name);
+    uint8_t reg_opcode_reg = 0b000;
+    uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
+    return modRM_code;
+}
+
 
 

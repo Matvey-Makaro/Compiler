@@ -6,14 +6,14 @@
 #include <sstream>
 
 const std::unordered_map<ID, std::unordered_set<ID>> Mov::valid_arguments = {
-        {ID::REGISTER_BYTE, {ID::REGISTER_BYTE, ID::REGISTER_BYTE_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_WORD, {ID::REGISTER_WORD, ID::REGISTER_WORD_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_DWORD, {ID::REGISTER_DWORD, ID::REGISTER_DWORD_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_QWORD, {ID::REGISTER_QWORD, ID::REGISTER_QWORD_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_BYTE_ADDITIONAL, {ID::REGISTER_BYTE, ID::REGISTER_BYTE_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_WORD_ADDITIONAL, {ID::REGISTER_WORD, ID::REGISTER_WORD_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_DWORD_ADDITIONAL, {ID::REGISTER_DWORD, ID::REGISTER_DWORD_ADDITIONAL, ID::INTEGER_NUMBER}},
-        {ID::REGISTER_QWORD_ADDITIONAL, {ID::REGISTER_QWORD, ID::REGISTER_QWORD_ADDITIONAL, ID::INTEGER_NUMBER}},
+        {ID::REGISTER_BYTE, {ID::REGISTER_BYTE, ID::REGISTER_BYTE_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_WORD, {ID::REGISTER_WORD, ID::REGISTER_WORD_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_DWORD, {ID::REGISTER_DWORD, ID::REGISTER_DWORD_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_QWORD, {ID::REGISTER_QWORD, ID::REGISTER_QWORD_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_BYTE_ADDITIONAL, {ID::REGISTER_BYTE, ID::REGISTER_BYTE_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_WORD_ADDITIONAL, {ID::REGISTER_WORD, ID::REGISTER_WORD_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_DWORD_ADDITIONAL, {ID::REGISTER_DWORD, ID::REGISTER_DWORD_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
+        {ID::REGISTER_QWORD_ADDITIONAL, {ID::REGISTER_QWORD, ID::REGISTER_QWORD_ADDITIONAL, ID::INTEGER_NUMBER, ID::VAR_BYTE, ID::VAR_WORD, ID::VAR_DWORD, ID::VAR_QWORD}},
 };
 
 
@@ -76,9 +76,7 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
 
             // 88 /r | MOV r/m8,r8
             result += "88 "; // opcode
-            uint8_t rm_reg = ListingGenerateHelper::get_register_code(strs[1]);
-            uint8_t reg_opcode_reg = ListingGenerateHelper::get_register_code(strs[3]);
-            uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
+            auto modRM_code = ListingGenerateHelper::get_modRM_for_reg_reg(strs[1], strs[3]);
             result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
         }
         else if (is_word_register(lex_line[1]) && is_word_register(lex_line[3]))
@@ -101,10 +99,8 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 result += ListingGenerateHelper::to_hex_string(rex_prefix) + " ";
             // 66 89/r | MOV r/m16,r16
             result += "89 ";  // opcode
-            uint8_t rm_reg = ListingGenerateHelper::get_register_code(strs[1]);
-            uint8_t reg_opcode_reg = ListingGenerateHelper::get_register_code(strs[3]);
-            uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
-            result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
+            auto modRM_code = ListingGenerateHelper::get_modRM_for_reg_reg(strs[1], strs[3]);
+            result += ListingGenerateHelper::to_hex_string(modRM_code);
         }
         else if(is_dword_register(lex_line[1]) && is_dword_register(lex_line[3]))
         {
@@ -124,10 +120,8 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 result += ListingGenerateHelper::to_hex_string(rex_prefix) + " ";
 
             result += "89 ";  // opcode
-            uint8_t rm_reg = ListingGenerateHelper::get_register_code(strs[1]);
-            uint8_t reg_opcode_reg = ListingGenerateHelper::get_register_code(strs[3]);
-            uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
-            result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
+            auto modRM_code = ListingGenerateHelper::get_modRM_for_reg_reg(strs[1], strs[3]);
+            result += ListingGenerateHelper::to_hex_string(modRM_code);
         }
         else if(is_qword_register(lex_line[1]) && is_qword_register(lex_line[3])) {
             uint8_t rex_prefix = 0b01001000;    //0b0100WRXB
@@ -138,10 +132,8 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
 
             result += ListingGenerateHelper::to_hex_string(rex_prefix); // REX prefix
             result += " 89 "; // opcode
-            uint8_t rm_reg = ListingGenerateHelper::get_register_code(strs[1]);
-            uint8_t reg_opcode_reg = ListingGenerateHelper::get_register_code(strs[3]);
-            uint8_t modRM_code = 0b11000000 | (reg_opcode_reg << 3) | rm_reg;
-            result += ListingGenerateHelper::to_hex_string(modRM_code); // modR/M
+            auto modRM_code = ListingGenerateHelper::get_modRM_for_reg_reg(strs[1], strs[3]);
+            result += ListingGenerateHelper::to_hex_string(modRM_code);
         }
         else assert(0);
     }
@@ -203,6 +195,69 @@ std::string Mov::generate(int line_number, const LexicalLine& lex_line, const st
                 result += to_little_endian_string(opcode) + " ";
 
                 result +=to_8byte_hex_str(strs[3]);
+            }
+            else assert(0);
+        }
+        else if(is_memory(lex_line[3]))
+        {
+            if(is_qword_register(lex_line[1]))
+            {
+                uint8_t rex_prefix = 0b01001000;    //0b0100WRXB
+                if (lex_line[1] == ID::REGISTER_QWORD_ADDITIONAL)
+                    rex_prefix |= 0b00000001;
+
+                result += ListingGenerateHelper::to_hex_string(rex_prefix); // REX prefix
+                // TODO: Если число влазит в int32_t, то можно использовать mov с opcode C7, пока что всегда использую с opcode B8
+                uint8_t opcode = 0xB8;
+                opcode |= ListingGenerateHelper::get_register_code(strs[1]);
+                result += " " + to_little_endian_string(opcode) + " ";
+
+                auto address = var_table.get_address_of_variable(strs[3]);
+                result += to_little_endian_string(static_cast<uint64_t>(address));
+            }
+            else if (is_dword_register(lex_line[1]))
+            {
+                if(lex_line[1] == ID::REGISTER_DWORD_ADDITIONAL)
+                {
+                    uint8_t rex_prefix = 0b01000001;
+                    result += to_little_endian_string(rex_prefix) + " ";
+                }
+
+                uint8_t opcode = 0xB8;
+                opcode |= ListingGenerateHelper::get_register_code(strs[1]);
+                result += to_little_endian_string(opcode) + " ";
+
+                auto address = var_table.get_address_of_variable(strs[3]);
+                result += to_little_endian_string(static_cast<uint32_t>(address));
+            }
+            else if(is_word_register(lex_line[1]))
+            {
+                result += "66 ";
+                if(lex_line[1] == ID::REGISTER_WORD_ADDITIONAL)
+                {
+                    uint8_t rex_prefix = 0b01000001;
+                    result += to_little_endian_string(rex_prefix) + " ";
+                }
+                uint8_t opcode = 0xB8;
+                opcode |= ListingGenerateHelper::get_register_code(strs[1]);
+                result += to_little_endian_string(opcode) + " ";
+
+                auto address = var_table.get_address_of_variable(strs[3]);
+                result += to_little_endian_string(static_cast<uint16_t>(address));
+            }
+            else if(is_byte_register(lex_line[1]))
+            {
+                if(lex_line[1] == ID::REGISTER_BYTE_ADDITIONAL)
+                {
+                    uint8_t rex_prefix = 0b01000001;
+                    result += to_little_endian_string(rex_prefix) + " ";
+                }
+                uint8_t opcode = 0xB0;
+                opcode |= ListingGenerateHelper::get_register_code(strs[1]);
+                result += to_little_endian_string(opcode) + " ";
+
+                auto address = var_table.get_address_of_variable(strs[3]);
+                result += to_little_endian_string(static_cast<uint8_t>(address));
             }
             else assert(0);
         }

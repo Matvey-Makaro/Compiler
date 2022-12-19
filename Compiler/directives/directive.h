@@ -27,13 +27,6 @@ protected:
     ID id;
 };
 
-class Add : public Directive
-{
-public:
-    Add() : Directive("add", ID::ADD) {}
-
-};
-
 class Mul : public Directive
 {
 public:

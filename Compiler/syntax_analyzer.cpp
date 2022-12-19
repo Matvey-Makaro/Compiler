@@ -8,6 +8,7 @@ SyntaxAnalyzer::SyntaxAnalyzer(const LexicalTable& lex_table) :
     constexpr size_t NUM_OF_DIRECTIVE = 10;
     directives.reserve(NUM_OF_DIRECTIVE);
 
+    directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Add()));
     directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Pop()));
     directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Mov()));
     directives.emplace_back(std::unique_ptr<ISyntaxChecker>(new Variable()));

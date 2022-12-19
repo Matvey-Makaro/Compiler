@@ -14,6 +14,8 @@ class ListingGenerateHelper
 public:
     static std::string to_hex_string(uint64_t value);
     static uint8_t get_register_code(std::string reg_name);
+    static uint8_t get_modRM_for_reg_reg(const std::string &lhs_reg_name, const std::string &rhs_reg_name);
+    static uint8_t get_modRM_for_reg_imm(const std::string& reg_name);
 
     // TODO: Добавить поддержку сегментных регистров потом
     // int8_t get_segment_register_code(const std::string& reg_name);

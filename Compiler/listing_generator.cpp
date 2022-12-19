@@ -8,6 +8,7 @@ ListingGenerator::ListingGenerator(const LexicalTable& lex_table, const VarTable
         lexic_table(lex_table), var_table(var_table), text(text)
 {
     // TODO: Добавить остальные директивы сюда, но лучше создать их в одном месте и везде передавать их в конструкторе.
+    directives.push_back(std::make_unique<Add>());
     directives.push_back(std::make_unique<Pop>());
     directives.push_back(std::make_unique<Mov>());
     directives.push_back(std::make_unique<Variable>());

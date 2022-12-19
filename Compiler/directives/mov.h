@@ -13,10 +13,9 @@ class Mov : public Directive, public ISyntaxChecker, public IListingGenerator
 public:
     Mov();
     virtual ~Mov() {}
-    virtual bool check(int lineNumber, const LexicalLine& ids) const;
+    virtual bool check(int line_number, const LexicalLine& ids) const;
     virtual std::string generate(int line_number, const LexicalLine& lex_line, const std::vector<std::string>& strs, const VarTable& var_table) const override;
 
 private:
 static const std::unordered_map<ID, std::unordered_set<ID>> valid_arguments;
-
 };
